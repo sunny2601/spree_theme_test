@@ -1,0 +1,124 @@
+<p><%= accurate_title %></p>
+
+<div data-hook="account_summary" class="account-summary well">
+  <dl id="user-info">
+    <dt><%= Spree.t(:email) %></dt>
+    <dd><%= @user.email %> (<%= link_to Spree.t(:edit), spree.edit_account_padiv %>)</dd>
+  </dl>
+</div>
+
+<div data-hook="account_my_orders" class="account-my-orders">
+
+  <h3><%= Spree.t(:my_orders) %></h3>
+  <% if @orders.present? %>
+    <div class="">
+      <div class="active col-md-12 col-row-2">
+        <div class="order-number col-md-2 inline-block-1 num-left"><p><%= Spree::Order.human_attribute_name(:number) %></p></div>
+        <div class="order-date col-md-2 inline-block-1"><p><%= Spree.t(:date) %></p></div>
+        <div class="order-status col-md-2 inline-block-1"><p><%= Spree.t(:status) %></p></div>
+        <div class="order-payment-state col-md-2 inline-block-1"><p><%= Spree.t(:payment_state) %></p></div>
+        <div class="order-shipment-state col-md-2 inline-block-1"><p><%= Spree.t(:shipment_state) %></p></div>
+        <div class="order-total col-md-2 inline-block-1"><p><%= Spree.t(:total) %></p></div>
+      </div>
+    <div>
+
+      <% @orders.each do |order| %>
+        <div class="">
+          <div class="col-md-12 col-sm-12 col-row-1">
+            <div class="order-number col-md-2 inline-block col-sm-2 num-left1"><p><%= link_to order.number, order_url(order), :class =>"odr_num" %></p></div>
+            <div class="order-date col-md-2 inline-block col-sm-2"><p><%= l order.completed_at.to_date %></p></div>
+            <div class="order-status col-md-2 col-sm-2 inline-block"><p><%= Spree.t("order_state.#{order.state}").titleize %></p></div>
+            <div class="order-payment-state col-md-2 inline-block col-sm-2"><p><%= Spree.t("payment_states.#{order.payment_state}").titleize if order.payment_state %></p></div>
+            <div class="order-shipment-state col-md-2 inline-block col-sm-2"><p><%= Spree.t("shipment_states.#{order.shipment_state}").titleize if order.shipment_state %></p></div>
+            <div class="lead text-primary order-total col-md-2 inline-block col-sm-2"><p><%= order.display_total %></p></div>
+          </div>
+        </div>
+      <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div class="alert alert-info"><%= Spree.t(:you_have_no_orders_yet) %></div>
+  <% end %>
+  <br />
+</div>
+
+<style type="text/css">
+  
+  .col-row-2{
+    background-color: white;
+    border-bottom: 1px solid grey;
+    border-top: 1px solid grey;
+    padding: 20px 0px 20px 0px;
+   
+  }
+  .col-row-1{
+    background-color: #ddd;
+    border-bottom: 1px solid grey;
+    border-top: 1px solid grey;
+    padding: 20px 0px 20px 0px;
+  }
+  .col-row-2 p{
+    text-align: center !important;
+    font-weight: 900 !important;
+  }
+  .col-row-1 p{
+    text-align: center !important;
+  }
+
+  @media(min-width: 768px) and (max-width: 991px){
+    .inline-block-1{
+     display: inline-block !important; 
+     padding-left:30px !important;
+     font-size: 18px !important;
+     font-weight: 600 !important;
+    }
+
+    .inline-block{
+     display: inline-block !important; 
+     padding-left:10px !important;
+     font-size: 18px !important;
+     font-weight: 600 !important;
+    }
+  }
+
+  @media(min-width: 480px) and (max-width: 767px){
+    .inline-block-1{
+     display: inline-block !important; 
+     padding-left:10px !important;
+     font-size: 13px !important;
+     font-weight: 300 !important;
+     padding-right: 3px !important;
+    }
+    .inline-block{
+     display: inline-block !important; 
+     padding-left:5px !important;
+     font-size: 13px !important;
+     font-weight: 300 !important;
+     padding-right: 4px !important;
+    }
+  }
+
+  @media(min-width: 200px)and (max-width: 479px){
+    .inline-block-1{
+     display: inline-block !important; 
+     padding-left:3px !important;
+     font-size: 10px !important;
+     padding-right: 5px !important;
+    }
+    .inline-block{
+     display: inline-block !important; 
+     padding-left:0px !important;
+     font-size: 10px !important; 
+     padding-right: 4px !important;
+    }
+
+    .num-left{
+      margin-left:15px !important;
+    }
+    .num-left1{
+      margin-left:10px !important;
+    }
+  }
+
+
+</style>

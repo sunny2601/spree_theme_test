@@ -1,0 +1,73 @@
+<div class="row">
+  <div class="col-sm-6 sm-1-pad" data-hook="billing_fieldset_wrapper">
+    <div class="panel panel-default" id="billing" data-hook>
+      <%= form.fields_for :bill_address do |bill_form| %>
+        <div class="panel-heading">
+          <h3 class="panel-title"><%= Spree.t(:billing_address) %></h3>
+        </div>
+        <div class="panel-body">
+          <%= render :partial => 'spree/address/form', :locals => { :form => bill_form, :address_type => 'billing', :address => @order.bill_address } %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="col-sm-6 sm-1-pad" data-hook="shipping_fieldset_wrapper">
+    <div class="panel panel-default" id="shipping" data-hook>
+      <%= form.fields_for :ship_address do |ship_form| %>
+        <div class="panel-heading">
+          <h3 class="panel-title"><%= Spree.t(:shipping_address) %></h3>
+        </div>
+        <div class="panel-body">
+          <p class="field checkbox" data-hook="use_billing">
+            <%= label_tag :order_use_billing, :id => 'use_billing' do %>
+              <%= check_box_tag 'order[use_billing]', '1', @order.shipping_eq_billing_address? %>
+              <%= Spree.t(:use_billing_address) %>
+            <% end %>
+          </p>
+          <%= render :partial => 'spree/address/form', :locals => { :form => ship_form, :address_type => 'shipping', :address => @order.ship_address } %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="well text-right form-buttons" data-hook="buttons">
+  <%= submit_tag Spree.t(:save_and_continue), :class => 'btn btn-lg btn-success' %>
+  <% if try_spree_current_user %>
+    <div data-hook="save_user_address">
+      <!-- &nbsp; &nbsp; -->
+      <div class=""> <%= check_box_tag 'save_user_address', '1', try_spree_current_user.respond_to?(:persist_order_address)%></div>
+      <%= label_tag :save_user_address, Spree.t(:save_my_address) %>
+    </div>
+  <% end %>
+</div>
+<style type="text/css">
+  textarea, select, input:not([type="radio"]):not([type="checkbox"]):not([type="hidden"]):not([type="button"]):not([type="submit"]):not([type="image"]) {
+    margin-right: 0px !important;
+    padding: 0px 20px 0px !important;
+    font: 16px "Crete Round",Georgia,"Times New Roman",Times,serif !important;    
+    }
+
+  @media(min-width: 200px) and (max-width: 400px){
+    .sm-1-pad{
+      padding-right: 0px !important;
+      padding-left: 0px !important;
+    }
+    .title-pad{
+     padding: 10px 5px !important;
+    }
+    .panel-body {
+      padding: 5px !important;
+    }
+    textarea, select, input:not([type="radio"]):not([type="checkbox"]):not([type="hidden"]):not([type="button"]):not([type="submit"]):not([type="image"]) {
+    margin-right: 0px !important;
+    padding: 0px 20px 0px !important;
+    font: 14px "Crete Round",Georgia,"Times New Roman",Times,serif !important;    
+    }
+    /*input[type="radio"], input[type="checkbox"] {
+    margin: 4px 150px 0px !important;
+     
+    }*/
+  }
+</style>

@@ -1,0 +1,47 @@
+<!-- <nav class="navbar navbar-default smalltext noti_bar" role="navigation">
+  <div class="nav navbar-right">
+    <ul class="nav navbar-nav noti_link">
+      <li><%#= render :partial => 'spree/shared/cart' %></li>
+      <li><a href="/cart">Checkout</a></li>
+      <%#= render :partial => 'spree/shared/account' %>
+    </ul>
+  </div>
+</nav> -->
+<!-- <div class="preview__header">
+
+  <div class="preview__envato-logo">
+    <a href="/item/astoria-bootstrap-html5-restaurant-template/12368595">Envato Market</a>
+  </div>
+
+  <div class="preview__actions">
+    <div class="preview__action-buy">
+      <a href="" class="btn btn-primary">
+        <%#= render :partial => 'spree/shared/cart' %>
+      </a>
+    </div>
+
+    <div class="preview__action-close">
+
+      <a href="/cart">Checkout</a>
+        <%#= render :partial => 'spree/shared/account' %>
+    </div>
+  </div>
+
+</div>
+ -->
+<div class="noti_bar remove-noti-bar">
+<!-- <div> -->
+  <ul>
+    <li><%= render :partial => 'spree/shared/cart' %></li>
+    <li><a href="/cart">Checkout</a></li>
+    <li><%= render :partial => 'spree/shared/account' %></li>
+  </ul>
+</div>
+
+<style type="text/css">
+    @media(max-width:768px){
+    .remove-noti-bar{
+      display: none !important;
+    }
+  }
+</style>

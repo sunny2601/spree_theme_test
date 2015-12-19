@@ -1,0 +1,72 @@
+<% variant = line_item.variant %>
+
+<%= order_form.fields_for :line_items, line_item do |item_form| %>
+  <div class="line-item">
+    <div class="container container-border">
+      <div class="col-md-1 col-sm-1g cart-item-image img-small-width" data-hook="cart_item_image">
+        <% if variant.images.length == 0 %>
+          <%= link_to small_image(variant.product), variant.product %>
+        <% else %>
+          <%= link_to image_tag(variant.images.first.attachment.url(:small)), variant.product %>
+        <% end %>
+      </div>
+      <div class="col-md-11 col-sm-11">
+        <div class="col-xs-12 col-sm-6 col-md-6 cart-item-description small-media-padding small-left-2" data-hook="cart_item_description">
+          <h4><%= link_to line_item.name, product_path(variant.product) %></h4>
+          <%= variant.options_text %>
+          <% if line_item.insufficient_stock? %>
+            <span class="out-of-stock">
+              <%= Spree.t(:out_of_stock) %>&nbsp;&nbsp;<br />
+            </span>
+          <% end %>
+          <!-- <div class="col-xs-12 col-sm-6 col-md-6"> -->
+            <span class="line-item-description" data-hook="line_item_description">
+              <%= line_item_description_text(truncate(line_item.description, length: 50)) %>
+            </span>
+          <!-- </div> -->
+        </div>
+      
+        <div class="col-md-2 col-sm-2 lead text-primary cart-item-price small-media-padding small-left-2" data-hook="cart_item_price">
+          <%= line_item.single_money.to_html %>
+        </div>
+        <div class="col-md-2 col-sm-2 cart-item-quantity small-media-padding small-left-2" data-hook="cart_item_quantity" valign="center">
+          <%= item_form.number_field :quantity, min: 0, class: "form-control line_item_quantity", size: 5 %>
+        </div>
+        <div class="col-md-2 col-sm-2 lead small-media-padding text-primary cart-item-total small-left-2" data-hook="cart_item_total">
+          <%= line_item.display_amount.to_html unless line_item.quantity.nil? %>
+        </div>
+      </div>
+    </div>
+      <!-- <div class="cart-item-delete" data-hook="cart_item_delete">
+      <%#= link_to content_tag(:span, '', class: 'glyphicon glyphicon-minus-sign'), '#', class: 'delete', id: "delete_#{dom_id(line_item)}" %>
+    </div> -->
+  </div>
+
+<% end %>
+<style type="text/css">
+  .container-border{
+    border-top: 1px solid #ddd !important;
+    border-bottom: 1px solid #ddd !important;
+    padding:30px 10px 30px 10px !important; 
+  }
+  @media(max-width: 767px){
+    .img-small-width{
+      width:30% !important;
+    }
+    .small-media-padding{
+      padding:10px 0px 10px 0px !important;
+    }
+  }
+  @media(min-width: 200px) and (max-width: 480px){
+    .small-left-2{
+     padding-left: 15px !important; 
+    }
+
+  }
+
+  @media(min-width: 768px)and (max-width: 992px){
+    .img-small-width{
+      width:20% !important; 
+    }
+  }
+</style>

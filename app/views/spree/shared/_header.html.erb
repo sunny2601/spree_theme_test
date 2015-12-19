@@ -1,0 +1,42 @@
+<%= render :partial => 'spree/shared/notification_bar' %>
+	<div class="head-height"><header id="header" class="navbar-default clearfix  col-sm-12">
+    <div id="logo" class="logo-float-none">
+      <a href="/"><p class="logo-center"><%= image_tag("logo.png", alt: "logo", :class => "logo-size-small")%></p>
+      <!-- <img src="/assets/logo.png" height="45" width="131" alt= "astoria">  --></a>
+    </div>
+   
+    <!-- <div class="tagline" style="margin-top:22px;padding-left:0px;left:-100;right:100px;">
+      <span>flavorful sauces</span>
+    </div> -->
+    <center>
+    <button type="button" style="float:none;" class="navbar-toggle collapsed col-sm-12" id="navbarCollapseButton" data-target="#bs-example-navbar-collapse-1" aria-expanded="false"> <span class="icon-bar toggal_clr"></span> <span class="icon-bar toggal_clr"></span> <span class="icon-bar toggal_clr"></span> </button></center>
+    <%= render :partial => 'spree/shared/main_nav_bar' if store_menu? %>
+  </header></div>
+
+<style>
+  @media(min-width:768px){
+    .head-height{
+      height: 155px !important;
+    }
+  }
+   @media(max-width:768px){
+    .logo-float-none{
+      float: none !important;
+    }
+    .logo-size-small{
+      width: auto !important;
+      height: auto !important;
+    }
+    .logo-center{
+      text-align: center !important;
+      margin-top:-15px;    
+    }
+  }
+
+   @media(max-width:480px){
+    .logo-size-small{
+      width: 200px !important;
+      height: auto !important;
+    }
+   }
+</style>

@@ -1,0 +1,56 @@
+<%= render partial: 'spree/shared/error_messages', locals: { target: @order } %>
+<div id="cart-detail" data-hook>
+ <!--  <div>
+    <div class="active col-md-12 col-sm-12" data-hook="cart_items_headers">
+      <div class="cart-item-description-header" style="display:inline-block;" colspan="2"><%#= Spree.t(:item) %></div>
+      <div class="cart-item-price-header" style="display:inline-block;"><%#= Spree.t(:price) %></div>
+      <div class="cart-item-quantity-header" style="display:inline-block;"><%#= Spree.t(:qty) %></div>
+      <div class="cart-item-total-header" style="display:inline-block;"><%#= Spree.t(:total) %></div>
+      <div class="cart-item-delete-header" style="display:inline-block;"></div>
+    </div>
+  </div> -->
+  <div id="line_items" class="" data-hook>
+    <%= render partial: 'spree/orders/line_item', collection: order_form.object.line_items, locals: { order_form: order_form } %>
+  </div>
+</div>
+  <%# if @order.adjustments.nonzero.exists? || @order.line_item_adjustments.nonzero.exists? || @order.shipment_adjustments.nonzero.exists? || @order.shipments.any? %>
+    <!-- <tr class="cart-subtotal">
+      <div colspan="4" align='right'><h5><%#= Spree.t(:cart_subtotal, count: @order.line_items.sum(:quantity)) %></h5></div>
+      <div colspan><h5><%= order_form.object.display_item_total %></h5></div>
+      <div></div>
+    </div>
+    <%#= render "spree/orders/adjustments" %>
+  <%# end %> -->
+</div>
+<div class="warning cart-total cart-deco container">
+  <div class="col-md-3 small-left-3 cart-small-deco pull-right">
+    <div class='inline-items-1'><h5><%= Spree.t(:total) %></h5></div>
+    <div class="lead text-primary inline-items-1 total-padding-1"><%= order_form.object.display_total %></div>
+    <div></div>
+  </div>
+</div>
+<style type="text/css">
+  .inline-items-1{
+    display: inline-block !important;
+  }
+  .cart-deco{
+    padding:20px 10px 20px 10px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .total-padding-1{
+    padding-left: 30px !important;
+  }
+
+  @media(max-width: 767px){
+    .cart-small-deco{
+      float: left !important;
+    }  
+  }
+
+  @media(min-width: 200px)and (max-width: 480px){
+    .small-left-3{
+     padding-left: 20px !important; 
+    }
+  }
+</style>

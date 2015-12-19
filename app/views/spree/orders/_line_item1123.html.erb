@@ -1,0 +1,50 @@
+
+<% variant = line_item.variant %>
+  <%= order_form.fields_for :line_items, line_item do |item_form| %>
+      <div class="cart-item-image col-md-3" data-hook="cart_item_image">
+        <% if variant.images.length == 0 %>
+          <%= link_to cart_image(variant.product), variant.product %>
+        <% else %>
+          <%= link_to image_tag(variant.images.first.attachment.url(:cart)), variant.product %>
+        <% end %>
+    </div> 
+  <div class="line-item row cartprod col-md-9 table_border">
+    <div class="item col-xs-12 col-sm-6 col-md-3 line-item-description" data-hook="line_item_description">
+      <p class="pcartmodel"><%= Spree.t(:model) %><span class="upper">: <%= link_to truncate(line_item.name, length: 10) %></span></p>
+    </div>
+
+    <div class="item col-xs-12 col-sm-6 col-md-2 cart-item-description" data-hook="cart_item_description">
+      <p class="pcart"><%= Spree.t(:size) %><span class="upper">: <%= variant.options_text %></span></p>
+      <% if line_item.insufficient_stock? %>
+        <span class="out-of-stock">
+          <%= Spree.t(:out_of_stock) %>&nbsp;&nbsp;<br />
+        </span>
+      <% end %>
+    </div>
+    
+    <div class="item col-xs-12 col-sm-6 col-md-3 cart-item-quantity" data-hook="cart_item_quantity">
+      <div class="form-group">
+        <p class="pcart" ><%= Spree.t(:quantity) %>
+        <%= item_form.number_field :quantity, min: 0, class: "form-control line_item_quantity amount", size: 5, style: "width: 50%;" %>
+          <%#= button_tag class: 'btn btn-info btn-xs ', id: 'update-button' do %>
+           <!-- <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> -->
+             <%#= Spree.t(:update) %>
+            <%# end %>
+          </p>
+      </div>
+    </div>
+
+
+    <div class=" priceitem col-sm-5 col-xs-11 col-md-2 text-primary cart-item-price" data-hook="cart_item_price">
+      <p class="pcart"><%= Spree.t(:price) %> <span class=""><%= line_item.single_money.to_html %></span></p>
+    </div>
+    
+    <div class="priceitem col-xs-1 col-sm-1 col-md-2 cart-item-delete" data-hook="cart_item_delete">
+      <%= button_tag class: 'btn btn-info btn-xs ', id: 'update-button' do %>
+           <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+             <%= Spree.t(:update) %>
+            <% end %>
+      <%= link_to content_tag(:span, '', class: 'glyphicon glyphicon-remove pcart'), '#', class: 'delete', id: "delete_#{dom_id(line_item)}" %>
+    </div>
+  </div>
+<%end%>

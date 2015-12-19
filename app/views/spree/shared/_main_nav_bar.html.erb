@@ -1,0 +1,42 @@
+  <nav class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" aria-expanded="false">
+  <div class="hold">
+  <!-- start main nav -->
+    <ul id="nav">
+      <li class="toggle-home"><a href="/">home</a></li>
+      <li><a href="/about">about</a></li>
+      <!--<li><a href="reservations.html">reservations</a></li>-->
+      <li><a href="/products">Store</a></li>
+      <li><a class="dropdown-toggle" href="/blog">Recipes</a>
+      <!--  <div class="dropdown-menu" role="menu">
+          <ul class="dropdown-hold">
+            <li><a href="#">dropdown</a></li>
+            <li><a href="#">menu</a></li>
+            <li><a href="#">example</a></li>
+          </ul>
+        </div> -->
+      </li>
+      <li><a href="/contact-us">contact</a></li>
+      <li class="toggle-nav-1"><a href="/cart">Checkout</a></li>
+      <ul class="toggle-nav-1 space-list">
+        <li ><%= render :partial => 'spree/shared/account' %></li>
+      </ul>
+    </ul>
+  </div>
+</nav>
+<style>
+  @media(min-width:768px){
+    .toggle-nav-1{
+      display: none !important;
+    }
+  }
+
+  @media(max-width:768px){
+    .toggle-home{
+      margin-top: 155px !important;
+    }
+    .space-list{
+    list-style-type: none;
+    padding-left: 0px;
+    }
+  }
+</style>

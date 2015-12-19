@@ -1,0 +1,219 @@
+<div class="row steps-data">
+  <% if order.has_step?("address") %>
+    <div class="col-md-3 small-lt-1" data-hook="order-bill-address">
+      <h4><%= Spree.t(:billing_address) %> <%= link_to "(#{Spree.t(:edit)})", checkout_state_path(:address) unless order.completed? %></h4>
+      <%= render 'spree/shared/address', address: order.bill_address %>
+    </div>
+
+    <% if order.has_step?("delivery") %>
+      <div class="col-md-3 small-lt-1" data-hook="order-ship-address">
+        <h4><%= Spree.t(:shipping_address) %> <%= link_to "(#{Spree.t(:edit)})", checkout_state_path(:address) unless order.completed? %></h4>
+        <%= render 'spree/shared/address', address: order.ship_address %>
+      </div>
+
+      <div class="col-md-3 small-lt-1" data-hook="order-shipment">
+        <h4><%= Spree.t(:shipments) %> <%= link_to "(#{Spree.t(:edit)})", checkout_state_path(:delivery) unless order.completed? %></h4>
+        <div class="delivery">
+          <% order.shipments.each do |shipment| %>
+            <div>
+              <i class='fa fa-truck'></i>
+              <%= Spree.t(:shipment_details, stock_location: shipment.stock_location.name, shipping_method: shipment.selected_shipping_rate.name) %>
+            </div>
+          <% end %>
+        </div>
+        <%= render 'spree/shared/shipment_tracking', order: order if order.shipped? %>
+      </div>
+    <% end %>
+  <% end %>
+
+  <% if order.has_step?("payment") %>
+    <div class="col-md-3 small-lt-1" data-hook="order-payment">
+      <h4><%= Spree.t(:payment_information) %> <%= link_to "(#{Spree.t(:edit)})", checkout_state_path(:payment) unless order.completed? %></h4>
+      <div class="payment-info">
+        <% order.payments.valid.each do |payment| %>
+          <%= render payment %><br/>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
+<hr />
+
+<table id='line-items' class="table" data-hook="order_details">
+  <col width="25%" valign="middle" halign="center">
+  <col width="60%" valign="middle">
+  <col width="5%" valign="middle" halign="center">
+  <col width="5%" valign="middle" halign="center">
+  <col width="5%" valign="middle" halign="center">
+
+  <!-- <thead data-hook>
+    <tr class="active" data-hook="order_details_line_items_headers">
+      <th colspan="2"><%#= Spree.t(:item) %></th>
+      <th class="price"><%#= Spree.t(:price) %></th>
+      <th class="qty"><%#= Spree.t(:qty) %></th>
+      <th class="total"><span><%#= Spree.t(:total) %></span></th>
+    </tr>
+  </thead> -->
+  
+
+  <div class="col-md-12 col-sm-12 col-xs-12 container-border"data-hook>
+    <% order.line_items.each do |item| %>
+      <div data-hook="order_details_line_item_row">
+        <div class="col-md-1 col-sm-2 col-xs-2 sm-4" data-hook="">
+          <% if item.variant.images.length == 0 %>
+            <%= link_to small_image(item.variant.product), item.variant.product %>
+          <% else %>
+            <%= link_to image_tag(item.variant.images.first.attachment.url(:small)), item.variant.product %>
+          <% end %>
+        </div>
+        <div class="col-md-7 col-sm-6 col-xs-5" data-hook="order_item_description">
+          <h4 class="font-1"><%= item.variant.product.name %></h4>
+         <span class="font-2" ><%= truncated_product_description(item.variant.product) %>
+          <%= "(" + item.variant.options_text + ")" unless item.variant.option_values.empty? %></span>
+        </div>
+        <div data-hook="order_item_price" class="lead item-pad-1  col-xs-1 col-md-1 col-sm-1 sm-1 text-primary price fon-1"><span><%= item.single_money.to_html %></span></div>
+        <div data-hook="order_item_qty" class="order-qty item-pad-1 item-2 col-xs-1 col-sm-1 col-md-1 sm-2 fon-2"><%= item.quantity %></div>
+        <div data-hook="order_item_total" class="lead text-primary item-pad-1 col-sm-1 col-xs-1 col-md-1 sm-3 fon-1 total"><span><%= item.display_amount.to_html %></span></div>
+      </div>
+    <% end %>
+  </div>
+  <tfoot id="order-total" data-hook="order_details_total">
+    <tr class="warning total">
+      <td colspan="4" align="right"><b><%= Spree.t(:order_total) %>:</b></td>
+      <td class="total"><span class="lead brand-color"><%= order.display_total.to_html %></span></td>
+    </tr>
+  </tfoot>
+
+  <tfoot id="subtotal" data-hook="order_details_subtotal">
+    <tr class="total" id="subtotal-row">
+      <td colspan="4"><b><%= Spree.t(:subtotal) %>:</b></td>
+      <td class="total"><span><%= order.display_item_total.to_html %></span></td>
+    </tr>
+  </tfoot>
+
+  <% if order.line_item_adjustments.exists? %>
+    <% if order.line_item_adjustments.promotion.eligible.exists? %>
+      <tfoot id="price-adjustments" data-hook="order_details_price_adjustments">
+        <% order.line_item_adjustments.promotion.eligible.group_by(&:label).each do |label, adjustments| %>
+         <tr class="total">
+           <td colspan="4"><%= Spree.t(:promotion) %>: <strong><%= label %></strong></td>
+           <td class="total"><span><%= Spree::Money.new(adjustments.sum(&:amount), currency: order.currency) %></span></td>
+         </tr>
+       <% end %>
+     </tfoot>
+    <% end %>
+  <% end %>
+
+  <tfoot id='shipment-total'>
+    <% order.shipments.group_by { |s| s.selected_shipping_rate.name }.each do |name, shipments| %>
+      <tr class="total" data-hook='shipment-row'>
+        <td colspan="4" align="right" class="text-muted"><%= Spree.t(:shipping) %>: <strong><%= name %></strong></td>
+        <td class="total"><span><%= Spree::Money.new(shipments.sum(&:discounted_cost), currency: order.currency).to_html %></span></td>
+      </tr>
+    <% end %>
+  </tfoot>
+
+  <% if order.all_adjustments.tax.exists? %>
+    <tfoot id="tax-adjustments" data-hook="order_details_tax_adjustments">
+      <% order.all_adjustments.tax.group_by(&:label).each do |label, adjustments| %>
+        <tr class="total">
+          <td colspan="4" align="right" class="text-muted"><%= Spree.t(:tax) %>: <strong><%= label %></strong></td>
+          <td class="total"><span><%= Spree::Money.new(adjustments.sum(&:amount), currency: order.currency) %></span></td>
+        </tr>
+      <% end %>
+    </tfoot>
+  <% end %>
+
+  <tfoot id="order-charges" data-hook="order_details_adjustments">
+    <% order.adjustments.eligible.each do |adjustment| %>
+      <% next if (adjustment.source_type == 'Spree::TaxRate') and (adjustment.amount == 0) %>
+      <tr class="total">
+        <td colspan="4" align="right"><strong><%= adjustment.label %></strong></td>
+        <td class="total brand-color"><span><%= adjustment.display_amount.to_html %></span></td>
+      </tr>
+    <% end %>
+  </tfoot>
+</table>
+<style type="text/css">
+  .brand-color{
+    color: #ebbc19 !important;
+  }
+
+  .container-border{
+    border-top: 1px solid #ddd !important;
+    border-bottom: 1px solid #ddd !important;
+    padding:30px 10px 30px 10px !important; 
+  }
+  .item-pad-1{
+    padding-top: 25px !important;
+  }
+  .item-2{
+    padding-left: 40px;
+    font-size: 24px; 
+
+  }
+  @media(min-width: 768px) and (max-width: 991px){
+    .inline-block-1{
+     display: inline-block !important; 
+     padding-left:30px !important;
+     font-size: 18px !important;
+     font-weight: 600 !important;
+    }
+
+    .inline-block{
+     display: inline-block !important; 
+     padding-left:10px !important;
+     font-size: 18px !important;
+     font-weight: 600 !important;
+    }
+  }
+
+  @media(min-width: 480px) and (max-width: 767px){
+    .font-1{
+      font-size: 14px !important;
+    }
+    .font-2{
+      font-size: 12px !important;
+    }
+
+    .small-lt-1{
+     padding-left: 25px !important; 
+    }
+  }
+
+  @media(min-width: 200px)and (max-width: 479px){
+    .small-lt-1{
+     padding-left: 25px !important; 
+    }
+
+    .font-1{
+      font-size: 12px !important;
+    }
+    .font-2{
+      font-size: 10px !important;
+    }
+    .sm-1{
+      padding-left: 0px !important;
+    }
+    .sm-2{
+      padding-left: 32px !important;
+    }
+    .sm-3{
+      padding-left: 1px !important;
+    }
+
+     .sm-4{
+      padding-left: 1px !important;
+      padding-right: 0px !important;
+      padding-top: 18px !important;
+    }
+    .fon-1{
+      font-size: 15px !important;
+    }
+    .fon-2{
+      font-size: 18px !important;
+    }
+  }
+
+
+</style>
